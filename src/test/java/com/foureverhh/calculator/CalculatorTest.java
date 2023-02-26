@@ -1,18 +1,41 @@
 package com.foureverhh.calculator;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("Test Math operations in Calculator class")
 class CalculatorTest {
+    private Calculator calculator;
+    @BeforeAll
+    static void setup() {
+        System.out.println("Executing @BeforeAll method.");
+    }
 
+    @AfterAll
+    static void cleanup() {
+        System.out.println("Executing @AfterAll method");
+    }
+
+    @BeforeEach
+    void beforeEachTestMethod() {
+        calculator = new Calculator();
+        System.out.println("Executing @BeforeEach method");
+    }
+
+    @AfterEach
+    void afterEachTestMethod() {
+        System.out.println("Executing @AfterEach method");
+    }
     @Test
-            @DisplayName("Test 4/2 = 2")
+    @DisplayName("Test 4/2 = 2")
     //void integerDivision() {
     void testIntegerDivision_WhenFourIsDividedByTwo_ShouldReturnTwo() {
-        Calculator calculator = new Calculator();
+        System.out.println("Test 4/2=2");
+        //Arrange  //Given
+        // calculator = new Calculator(); //  replace by @BeforeEach
+        //Act      //When
         int result = calculator.integerDivision(4,2);
+        //Assert   //Then
         assertEquals(2, result, "4/2 did not produce 2");
         // fail("should fail");
     }
@@ -20,14 +43,16 @@ class CalculatorTest {
     @Test
     @DisplayName("Division by Zero")
     void testIntegerDivision_WhenDividendIsDividedByTwo_ShouldThrowArithmeticException() {
-        Calculator calculator = new Calculator();
+        System.out.println("Division by Zero");
+        // calculator = new Calculator();  //  replace by @BeforeEach
         calculator.integerDivision(4,0);
         fail("Not implemented yet");
     }
     @Test
     @DisplayName("Test 33 - 1 = 32")
     void integerSubtraction() {
-        Calculator calculator = new Calculator();
+        System.out.println("Test 33 - 1 = 32");
+        //calculator = new Calculator(); //  replace by @BeforeEach
         int result = calculator.integerSubtraction(33, 1);
         assertEquals(32,result);
     }
