@@ -40,13 +40,34 @@ class CalculatorTest {
         // fail("should fail");
     }
 
-    @Test
+    //@Test
     @DisplayName("Division by Zero")
     void testIntegerDivision_WhenDividendIsDividedByTwo_ShouldThrowArithmeticException() {
         System.out.println("Division by Zero");
         // calculator = new Calculator();  //  replace by @BeforeEach
         calculator.integerDivision(4,0);
         fail("Not implemented yet");
+    }
+    // @Disabled("The reason to disable unit test")
+    @Test
+    @DisplayName("Division by Zero")
+    void disable_testIntegerDivision_WhenDividendIsDividedByTwo_ShouldThrowArithmeticException() {
+        System.out.println("Division by Zero");
+        // calculator = new Calculator();  //  replace by @BeforeEach
+        // Arrange
+        int divident = 4;
+        int divisor = 0;
+        String expectedExceptionMessage = "/ by zero";
+
+        // Act and Assert
+        ArithmeticException actualException = assertThrows(ArithmeticException.class,()->{
+            // Act
+            calculator.integerDivision(divident,divisor);
+        }, "Division by zero should have thrown an Arithmetic exception.");
+
+        // Assert
+        assertEquals(expectedExceptionMessage, actualException.getMessage(), "Unexpected exception message");
+        // fail("Not implemented yet");
     }
     @Test
     @DisplayName("Test 33 - 1 = 32")
