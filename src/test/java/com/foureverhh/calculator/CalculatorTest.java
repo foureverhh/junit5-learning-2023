@@ -1,6 +1,11 @@
 package com.foureverhh.calculator;
 
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("Test Math operations in Calculator class")
@@ -78,5 +83,39 @@ class CalculatorTest {
         assertEquals(32,result);
     }
 
+    @DisplayName("Test integer subtraction [minuend, subtrahend, expectedResult]")
+    @ParameterizedTest
+    @MethodSource("integerSubtractionInputParameters")
+    void integerSubtractionWithParameters(int minuend, int subtrahend, int expectedResult) {
+        System.out.println("Test 33 - 1 = 32");
+        //calculator = new Calculator(); //  replace by @BeforeEach
+        int result = calculator.integerSubtraction(minuend, subtrahend);
+        assertEquals(expectedResult,result);
+    }
 
+    private static Stream<Arguments> integerSubtractionInputParameters() {
+       return Stream.of(
+               Arguments.of(33,1,32),
+               Arguments.of(54,1,53),
+               Arguments.of(24,1,23)
+       );
+    }
+
+    @DisplayName("Test integer subtraction [minuend, subtrahend, expectedResult]")
+    @ParameterizedTest
+    @MethodSource
+    void integerSubtractionWithPara(int minuend, int subtrahend, int expectedResult) {
+        System.out.println("Test 33 - 1 = 32");
+        //calculator = new Calculator(); //  replace by @BeforeEach
+        int result = calculator.integerSubtraction(minuend, subtrahend);
+        assertEquals(expectedResult,result);
+    }
+
+    private static Stream<Arguments> integerSubtractionWithPara() {
+        return Stream.of(
+                Arguments.of(33,1,32),
+                Arguments.of(54,1,53),
+                Arguments.of(24,1,23)
+        );
+    }
 }
