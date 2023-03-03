@@ -3,6 +3,7 @@ package com.foureverhh.calculator;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -124,6 +125,15 @@ class CalculatorTest {
     @ParameterizedTest
     @CsvSource({"33,1,32", "24,1,23"})
     void integerSubtractionWithParaFromCsv(int minuend, int subtrahend, int expectedResult) {
+        //calculator = new Calculator(); //  replace by @BeforeEach
+        int result = calculator.integerSubtraction(minuend, subtrahend);
+        assertEquals(expectedResult,result);
+    }
+
+    @DisplayName("Test integer subtraction [minuend, subtrahend, expectedResult]")
+    @ParameterizedTest
+    @CsvFileSource(resources = "integerSubtractionWithParaFromCsvFile.csv")
+    void integerSubtractionWithParaFromCsvFile(int minuend, int subtrahend, int expectedResult) {
         //calculator = new Calculator(); //  replace by @BeforeEach
         int result = calculator.integerSubtraction(minuend, subtrahend);
         assertEquals(expectedResult,result);
