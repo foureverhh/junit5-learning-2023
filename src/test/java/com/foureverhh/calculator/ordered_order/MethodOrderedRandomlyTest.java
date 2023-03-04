@@ -1,4 +1,4 @@
-package com.foureverhh.calculator;
+package com.foureverhh.calculator.ordered_order;
 
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
