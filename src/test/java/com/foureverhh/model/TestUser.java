@@ -1,13 +1,13 @@
 package com.foureverhh.model;
 
-public class User {
+public class TestUser {
     private int id;
     private String name;
 
-    public User() {
+    public TestUser() {
     }
 
-    public User(int id, String name) {
+    public TestUser(int id, String name) {
         this.id = id;
         this.name = name;
     }

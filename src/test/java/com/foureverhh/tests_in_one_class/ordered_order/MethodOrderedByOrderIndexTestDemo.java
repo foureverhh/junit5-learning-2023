@@ -1,6 +1,6 @@
 package com.foureverhh.tests_in_one_class.ordered_order;
 
-import com.foureverhh.model.User;
+import com.foureverhh.model.TestUser;
 import org.junit.jupiter.api.*;
 
 import java.util.HashMap;
@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class )
 public class MethodOrderedByOrderIndexTestDemo {
-    private Map<String,User> userMap;
+    private Map<String, TestUser> userMap;
 
     @BeforeAll
     void setup() {
@@ -41,7 +41,7 @@ public class MethodOrderedByOrderIndexTestDemo {
     void testA() {
         System.out.println("Running test A");
         completed.append("2");
-        User user = userMap.get("user");
+        TestUser user = userMap.get("user");
         user.setName("updated user");
         userMap.put("user", user);
     }
@@ -52,7 +52,7 @@ public class MethodOrderedByOrderIndexTestDemo {
     void testD() {
         System.out.println("Running test D");
         completed.append("1");
-        userMap.put("user", new User(1, "user"));
+        userMap.put("user", new TestUser(1, "user"));
     }
 
     @Test
