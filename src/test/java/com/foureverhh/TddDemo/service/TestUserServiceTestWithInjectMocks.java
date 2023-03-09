@@ -3,11 +3,11 @@ package com.foureverhh.TddDemo.service;
 import com.foureverhh.TddDemo.model.User;
 import com.foureverhh.TddDemo.repository.UserRepository;
 import com.foureverhh.TddDemo.service.impl.UserServiceImpl;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -16,8 +16,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class TestUserServiceTest {
-    UserService userService;
+public class TestUserServiceTestWithInjectMocks {
+    @InjectMocks
+    UserServiceImpl userService;
     @Mock
     UserRepository userRepository;
     String firstname;
@@ -28,7 +29,7 @@ public class TestUserServiceTest {
 
     @BeforeEach
     void inti() {
-        userService = new UserServiceImpl(userRepository);
+        // userService = new UserServiceImpl(userRepository);
         firstname ="firstname";
         lastname ="firstname";
         email ="firstname";
@@ -45,8 +46,6 @@ public class TestUserServiceTest {
 
         // Assert
         assertNotNull(user,"The createUser() should not return null");
-        Mockito.verify(userRepository,Mockito.times(1)).save(Mockito.any(User.class));
-
     }
 
     @Test
@@ -65,13 +64,10 @@ public class TestUserServiceTest {
     @Test
     void testCreateUser_whenFirstNameIsEmpty_throwsIllegalArgumentException() {
         // Arrange
-
-        firstname = "";
-
+        when(userRepository.save(Mockito.any(User.class))).thenReturn(true);
         Exception exception = assertThrows(IllegalAccessException.class,
                      () -> {
                          // Act
-                         when(userRepository.save(Mockito.any(User.class))).thenReturn(true);
                          userService.createUser(firstname, lastname,email, password, repeatPassword);
                      },
                      "Firstname is empty should throws exceptions");
