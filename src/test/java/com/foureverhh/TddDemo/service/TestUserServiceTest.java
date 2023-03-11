@@ -19,6 +19,8 @@ import static org.mockito.Mockito.when;
 public class TestUserServiceTest {
     UserService userService;
     @Mock
+    EmailVerificationService emailVerificationService;
+    @Mock
     UserRepository userRepository;
     String firstname;
     String lastname;
@@ -28,7 +30,7 @@ public class TestUserServiceTest {
 
     @BeforeEach
     void inti() {
-        userService = new UserServiceImpl(userRepository);
+        userService = new UserServiceImpl(userRepository, emailVerificationService);
         firstname ="firstname";
         lastname ="firstname";
         email ="firstname";
@@ -71,7 +73,6 @@ public class TestUserServiceTest {
         Exception exception = assertThrows(IllegalAccessException.class,
                      () -> {
                          // Act
-                         when(userRepository.save(Mockito.any(User.class))).thenReturn(true);
                          userService.createUser(firstname, lastname,email, password, repeatPassword);
                      },
                      "Firstname is empty should throws exceptions");
@@ -80,4 +81,6 @@ public class TestUserServiceTest {
         assertEquals("Firstname should not empty", exception.getMessage());
 
     }
+
+
 }

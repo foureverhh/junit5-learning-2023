@@ -1,5 +1,7 @@
 package com.foureverhh.TddDemo.service;
 
+import com.foureverhh.TddDemo.exception.EmailNotificationException;
+import com.foureverhh.TddDemo.exception.UserServiceException;
 import com.foureverhh.TddDemo.model.User;
 import com.foureverhh.TddDemo.repository.UserRepository;
 import com.foureverhh.TddDemo.service.impl.UserServiceImpl;
@@ -13,7 +15,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class TestUserServiceTestWithInjectMocks {
@@ -21,6 +24,8 @@ public class TestUserServiceTestWithInjectMocks {
     UserServiceImpl userService;
     @Mock
     UserRepository userRepository;
+    @Mock
+    EmailVerificationService emailVerificationService;
     String firstname;
     String lastname;
     String email;
@@ -39,7 +44,7 @@ public class TestUserServiceTestWithInjectMocks {
     @Test
     void testCreateUser_whenUserDetailsProvided_returnsUserObject() {
         // Arrange
-        when(userRepository.save(Mockito.any(User.class))).thenReturn(true);
+        when(userRepository.save(any(User.class))).thenReturn(true);
 
         // Act
         User user = userService.createUser(firstname, lastname,email, password, repeatPassword);
@@ -52,7 +57,7 @@ public class TestUserServiceTestWithInjectMocks {
     void testCreateUser_whenUserCreated_returnUserObjectContainsSameFirstname() {
 
         // Arrange
-        when(userRepository.save(Mockito.any(User.class))).thenReturn(true);
+        when(userRepository.save(any(User.class))).thenReturn(true);
         // Act
         User user = userService.createUser(firstname, lastname,email, password, repeatPassword);
 
@@ -64,7 +69,7 @@ public class TestUserServiceTestWithInjectMocks {
     @Test
     void testCreateUser_whenFirstNameIsEmpty_throwsIllegalArgumentException() {
         // Arrange
-        when(userRepository.save(Mockito.any(User.class))).thenReturn(true);
+        firstname = "";
         Exception exception = assertThrows(IllegalAccessException.class,
                      () -> {
                          // Act
@@ -75,5 +80,55 @@ public class TestUserServiceTestWithInjectMocks {
         // Assert
         assertEquals("Firstname should not empty", exception.getMessage());
 
+    }
+
+    @Test
+    void testCreateUser_whenSaveMethodThrowsException_thenThrowsUserServiceException() {
+        // Arrange
+        Mockito.when(userRepository.save(any(User.class))).thenThrow(RuntimeException.class);
+        // Act
+         assertThrows(UserServiceException.class, ()->{
+            userService.createUser(firstname,lastname,email,password,repeatPassword);
+        }, "should throw UserServiceException");
+        // Assert
+
+        // assertEquals(e.getMessage(),"Could not create user");
+    }
+
+    @Test
+    @DisplayName("email exception is handled")
+    void testCreatUser_whenEmailNotificationExceptionThrown_throwsEmailException() {
+        when(userRepository.save(any(User.class))).thenReturn(true);
+        // whenThrow works only to methods with return types
+        // when(emailVerificationService.scheduledEmailConfirmation(Mockito.any(User.class))).thenThrow();
+        // arrange for void method
+        doThrow(EmailNotificationException.class).when(emailVerificationService).scheduledEmailConfirmation(any(User.class));
+
+        Exception e = assertThrows(EmailNotificationException.class, ()->{
+            userService.createUser(firstname,lastname,email,password,repeatPassword);
+        },"email exception not handled");
+
+        assertEquals("Could not send email", e.getMessage());
+        verify(userRepository, times(1)).save(any(User.class));
+        verify(emailVerificationService, Mockito.atLeastOnce()).scheduledEmailConfirmation(any(User.class));
+    }
+
+    @Test
+    @DisplayName("No email exception is handled")
+    void testCreatUser_whenEmailNotificationExceptionNotThrown_throwsUserServiceException() {
+        when(userRepository.save(any(User.class))).thenThrow(RuntimeException.class);
+        // whenThrow works only to methods with return types
+        // when(emailVerificationService.scheduledEmailConfirmation(Mockito.any(User.class))).thenThrow();
+        // arrange for void method throw exception
+        // doThrow(EmailNotificationException.class).when(emailVerificationService).scheduledEmailConfirmation(any(User.class));
+        // arrange for void method do nothing
+        doNothing().when(emailVerificationService).scheduledEmailConfirmation(any(User.class));
+        Exception e = assertThrows(EmailNotificationException.class, ()->{
+            userService.createUser(firstname,lastname,email,password,repeatPassword);
+        },"email exception not handled");
+
+        assertEquals("Could not send email", e.getMessage());
+        verify(userRepository, times(1)).save(any(User.class));
+        verify(emailVerificationService, Mockito.atLeastOnce()).scheduledEmailConfirmation(any(User.class));
     }
 }
