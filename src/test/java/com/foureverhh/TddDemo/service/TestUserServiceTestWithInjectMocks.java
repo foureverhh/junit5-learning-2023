@@ -131,4 +131,13 @@ public class TestUserServiceTestWithInjectMocks {
         verify(userRepository, times(1)).save(any(User.class));
         verify(emailVerificationService, Mockito.atLeastOnce()).scheduledEmailConfirmation(any(User.class));
     }
+
+    @Test
+    @DisplayName("Schedule Email confirmation is executed")
+    void testCreateUser_whenUserCreated_schedulesEmailConfirmation() {
+        // Arrange
+        when(userRepository.save(any(User.class))).thenReturn(true);
+        doCallRealMethod().when(emailVerificationService).scheduledEmailConfirmation(any(User.class));
+        userService.createUser(firstname,lastname,email, password ,repeatPassword);
+    }
 }

@@ -7,5 +7,6 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
     @Override
     public void scheduledEmailConfirmation(User user) {
         // Put user Details into email
+        System.out.println("method is called");
     }
 }
