@@ -4,6 +4,7 @@ import com.foureverhh.TddDemo.exception.EmailNotificationException;
 import com.foureverhh.TddDemo.exception.UserServiceException;
 import com.foureverhh.TddDemo.model.User;
 import com.foureverhh.TddDemo.repository.UserRepository;
+import com.foureverhh.TddDemo.service.impl.EmailVerificationServiceImpl;
 import com.foureverhh.TddDemo.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,7 +26,7 @@ public class TestUserServiceTestWithInjectMocks {
     @Mock
     UserRepository userRepository;
     @Mock
-    EmailVerificationService emailVerificationService;
+    EmailVerificationServiceImpl emailVerificationService;
     String firstname;
     String lastname;
     String email;
@@ -93,6 +94,19 @@ public class TestUserServiceTestWithInjectMocks {
         // Assert
 
         // assertEquals(e.getMessage(),"Could not create user");
+    }
+
+    @Test
+    void testCreateUser_whenSaveMethodReturnFalse_thenThrowsUserServiceException() {
+        // Arrange
+        Mockito.when(userRepository.save(any(User.class))).thenReturn(false);
+        // Act
+        Exception e =assertThrows(UserServiceException.class, ()->{
+            userService.createUser(firstname,lastname,email,password,repeatPassword);
+        }, "should throw UserServiceException");
+        // Assert
+
+        assertEquals(e.getMessage(),"Could not create user");
     }
 
     @Test
